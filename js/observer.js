@@ -7,7 +7,7 @@ function newObservable() {
 
   /**
    * Adds the provided observer to the notify list. The observer must
-`  * have an update() method.
+   * have an update() method.
    */
   function attach(observer) {
     observers.push(observer);
