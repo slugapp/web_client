@@ -1,5 +1,7 @@
 var expect = chai.expect;
 
+var test_div = document.getElementById("test_div");
+
 function newMockObserver() {
     var mock = {};
     mock.notified = false;
@@ -62,6 +64,70 @@ describe('Event List', function() {
       model.update();
       expect(observer.notified).to.be.true;
     });
+  });
+
+  it('has correct initial view', function() {
+    var model = newEventListModel(newMockEventsApi());
+    var view = newEventListView();
+    var controller = newEventListController(model, view);
+    test_div.appendChild(view.root);
+
+    expect(test_div.innerHTML).to.equal("<ul></ul>");
+  });
+
+  it('correctly updates view on model changes', function() {
+    testCases = [
+        {
+          events: [
+            {name: "a", summary: "b"},
+            {name: "c", summary: "d"},
+          ],
+          expected: "<ul>" +
+            "<li>a</li>" +
+            "<li>b</li>" +
+            "<li>c</li>" +
+            "<li>d</li>" +
+            "</ul>",
+        },
+        {
+          events: [
+            {name: "a", summary: "b"},
+          ],
+          expected: "<ul>" +
+            "<li>a</li>" +
+            "<li>b</li>" +
+            "</ul>",
+        },
+        {
+          events: [
+            {name: "e", summary: "f"},
+          ],
+          expected: "<ul>" +
+            "<li>e</li>" +
+            "<li>f</li>" +
+            "</ul>",
+        },
+        {
+          events: [],
+          expected: "<ul></ul>",
+        }
+      ];
+  
+    var mockApi = newMockEventsApi();
+    var model = newEventListModel(mockApi);
+    var view = newEventListView();
+    var controller = newEventListController(model, view);
+    test_div.appendChild(view.root);
+
+    _.each(testCases, function(testCase) {
+        mockApi.setEvents(testCase.events);
+        model.update();
+        expect(test_div.innerHTML).to.equal(testCase.expected);
+      });
+  });
+
+  afterEach(function() {
+    test_div.innerHTML = "";
   });
 });
 
