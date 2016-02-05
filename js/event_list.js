@@ -20,7 +20,7 @@ function newEventListModel(eventApi) {
    * of the change.
    */
   function update() {
-    var events = eventApi.getEvents(updateEvents);
+    events = eventApi.getEvents(updateEvents);
   }
 
   /**
